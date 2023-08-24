@@ -1,9 +1,9 @@
-import http from "http";
+import https from "https";
 import { app } from "./app";
 import nodemailer from "nodemailer";
 import { SMTPServer } from "smtp-server";
 
-http.createServer(app).listen(3000);
+https.createServer(app).listen(3000);
 
 const server = new SMTPServer({
   onAuth(auth, session, callback) {
