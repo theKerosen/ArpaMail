@@ -13,13 +13,14 @@ router.get("/", async (req, res) => {
 
 router.post("/send/", async (req, res) => {
   const body = req.body;
+  console.log(req.body);
   const token = req.query.token;
   if (token !== process.env.token)
     return res.status(401).json({
       message: "Arpa Mail não é um serviço público.",
     });
 
-  if (!body || !body.senderEmail || !body.text)
+  if (!body)
     return res.status(400).json({
       error: "invalid body.",
       example: {

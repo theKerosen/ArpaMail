@@ -2,33 +2,30 @@ import https from "https";
 import { app } from "./app";
 import nodemailer from "nodemailer";
 import { SMTPServer } from "smtp-server";
+import { simpleParser } from "mailparser";
 
 https.createServer(app).listen(3000);
 
 const server = new SMTPServer({
-  onAuth(auth, session, callback) {
-    const { username, password } = auth;
-    if (!username || !password) {
-      return callback(new Error("Usuário ou senha não encontrado"));
-    }
-    if (username !== process.env.USERNAME)
-      return callback(new Error("Usuário inválido!"));
-    if (password !== process.env.PASSWORD)
-      return callback(new Error("Senha inválida!"));
-    callback(null);
+  onData(stream, session, callback) {
+    simpleParser(stream, {}, (err, parsed) => {
+      if (err) console.log("Error:", err);
+
+      console.log(parsed);
+      stream.on("end", callback);
+    });
   },
+  disabledCommands: ["AUTH"],
 });
 
 server.listen(parseInt(process.env.PORT ?? ""), process.env.HOSTNAME, () => {
-  console.log("Servidor SMTP local iniciado");
+  console.log("Servidor SMTP iniciado");
 });
 
 const transporter = nodemailer.createTransport({
   host: process.env.HOSTNAME,
   from: process.env.EMAIL_ALIAS,
   port: parseInt(process.env.PORT ?? ""),
-  secure: false,
-  ignoreTLS: true,
 });
 
 console.log("Up & Running.");
