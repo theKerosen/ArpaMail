@@ -17,7 +17,7 @@
     "nodemailer": "^6.9.4",
     "prettier": "^3.0.0",
     "resend": "^1.0.0",
-    "smtp-server": "^3.13.0",
+    "smtp-server": "^3.13.2",
     "ts-node": "^10.9.1"
   },
   "scripts": {
